@@ -37,7 +37,7 @@ def bytes_para_gb(bytes_value):
 def milissegundos_para_segundos(ms_value):
     return ms_value / 1000
 
-connection = mysql_connection('localhost', 'medconnect', 'medconnect123', 'medconnect')
+connection = mysql_connection('localhost', 'root', '123456', 'medconnect')
 
 #Disco
 
@@ -51,7 +51,7 @@ disco = psutil.disk_usage(nome_disco)
 discoPorcentagem = disco.percent
 
 ins = [discoPorcentagem]
-componentes = [10,11,12,13,14]
+componentes = [13]
 
 horarioAtual = datetime.now()
 horarioFormatado = horarioAtual.strftime('%Y-%m-%d %H:%M:%S')
@@ -121,16 +121,7 @@ while True:
     if latencia is not None:
         print(f"Latência para {destino}: {latencia:.2f} ms")
     else:
-        print(f"Não foi possível alcançar {destino}")  
-
-    
-    if network_active:
-
-        print ("A rede está ativa.")
-        statusRede= 1
-    else:
-
-        print ("A rede não está ativa.")
+        print(f"Não foi possível alcançar {destino}")
 
     #Outros
     boot_time = datetime.fromtimestamp(psutil.boot_time()).strftime("%Y-%m-%d %H:%M:%S")
@@ -140,7 +131,7 @@ while True:
     horarioFormatado = horarioAtual.strftime('%Y-%m-%d %H:%M:%S')
     
     ins = [cpuPorcentagem, memoriaPorcentagem, latencia]
-    componentes = [1,2,3,4,5,6,7,8,9,15,16,17,18]
+    componentes = [1, 8, 19]
     
     cursor = connection.cursor()
     
