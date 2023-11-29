@@ -8,6 +8,7 @@ from datetime import datetime
 import ping3
 import json
 import requests
+import pymssql
 
 #alerta = {"text": "alerta"}
 
@@ -37,7 +38,9 @@ def bytes_para_gb(bytes_value):
 def milissegundos_para_segundos(ms_value):
     return ms_value / 1000
 
-connection = mysql_connection('localhost', 'root', '123456', 'medconnect')
+#connection = mysql_connection('localhost', 'root', '123456', 'medconnect')
+sqlserver_connection = pymssql.connect(server='52.7.105.138', database='medconnect', user='sa', password='medconnect123');
+
 
 #Disco
 
@@ -56,7 +59,9 @@ componentes = [13]
 horarioAtual = datetime.now()
 horarioFormatado = horarioAtual.strftime('%Y-%m-%d %H:%M:%S')
 
-cursor = connection.cursor()
+#cursor = connection.cursor()
+server_cursor = sqlserver_connection.cursor()
+    
 for i in range(len(ins)):
         
     dado = ins[i]
@@ -65,7 +70,8 @@ for i in range(len(ins)):
     
     query = "INSERT INTO Registros (dado, fkRoboRegistro, fkComponente, HorarioDado) VALUES (%s, %s, %s, %s)"
     
-    cursor.execute(query, (dado, idRobo, componente, horarioFormatado))
+    #cursor.execute(query, (dado, idRobo, componente, horarioFormatado))
+    server_cursor.execute(query, (dado, idRobo, componente, horarioFormatado))
 
 
 
@@ -133,7 +139,9 @@ while True:
     ins = [cpuPorcentagem, memoriaPorcentagem, latencia]
     componentes = [1, 8, 19]
     
-    cursor = connection.cursor()
+    #cursor = connection.cursor()
+    server_cursor = sqlserver_connection.cursor()
+    
     
     for i in range(len(ins)):
         dado = ins[i]
@@ -141,9 +149,11 @@ while True:
 
         query = "INSERT INTO Registros (dado, fkRoboRegistro, fkComponente, HorarioDado) VALUES (%s, %s, %s, %s)"
 
-        cursor.execute(query, (dado, idRobo, componente, horarioFormatado))
-        connection.commit()
+        #cursor.execute(query, (dado, idRobo, componente, horarioFormatado))
+        server_cursor.execute(query, (dado, idRobo, componente, horarioFormatado))
 
+        #connection.commit()
+        sqlserver_connection.commit()
        
     print("\nINFORMAÇÕES SOBRE PROCESSAMENTO: ")
     print('\nPorcentagem utilizada da CPU: ',cpuPorcentagem,
@@ -155,6 +165,8 @@ while True:
 
     time.sleep(5)
 
-cursor.close()
-connection.close()
+#cursor.close()
+#connection.close()
+server_cursor.close()
+sqlserver_connection.close()
     
